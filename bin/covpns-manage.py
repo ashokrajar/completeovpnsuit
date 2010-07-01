@@ -27,18 +27,16 @@ def create_key(key_type):
     # Build Diffie-Hellman parameters for the server side
     # of an SSL/TLS connection.
     if cmd_options.key_type == "dh":
-        print "Creating dh .."
-        dhparam_cmd = modules.common.opensslcmd + " dhparam -out " + modules.common.server_key_dir + "/dh" + modules.common.openssl_key_size + ".pem " + modules.common.openssl_key_size
-        print dhparam_cmd
-        proc = subprocess.Popen(dhparam_cmd, shell=False, bufsize=4096, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        while proc.poll() == None:
-            modules.common.show_rotating_progressmarker()
-
-        #if dhparam_status[0] != 0:
-        #    print "Error Occured"
-        #    print dhparam_status[1]
-        #OPENSSL dhparam -out ${KEY_DIR}/dh${KEY_SIZE}.pem ${KEY_SIZE}
-        #print "Creating dh"
+        dh_file = modules.common.server_key_dir + "/dh" + modules.common.openssl_key_size + ".pem"
+        if os.path.exists(dh_file):
+            print "Please wait while I Build Diffie-Hellman parameters .."
+            dhparam_cmd = modules.common.opensslcmd + " dhparam -out " + dh_file + " " + modules.common.openssl_key_size
+            proc = subprocess.Popen(dhparam_cmd, shell=False, bufsize=4096, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            while proc.poll() == None:
+                modules.common.show_rotating_progressmarker()
+        else:
+            sys.stderr.write("Error : Diffie-Hellman parameters Already Exists.\nOverwriting the parameters may Break the CompleteOVPNSuit Functionallity. So not Creating the parameters")
+            sys.exit(246)    
     elif cmd_options.key_type == "ca":
         print "Creating ca"
     elif cmd_options.key_type == "user":

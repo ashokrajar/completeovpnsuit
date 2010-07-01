@@ -10,6 +10,7 @@ EXIT_CODE       Description
 249             make install failed
 248             openssl not Installed
 247             pkcs11-tool not Installed (opensc)
+246				Diffie-Hellman Key Already Exists
 
 1               Program Exit Status
 0               Success
