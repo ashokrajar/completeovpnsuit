@@ -1,0 +1,65 @@
+8
+
+dir
+15
+svn+ssh://ashokraja@192.168.10.100/home/svn/repo/projects/completeovpnsuit/bin/modules
+svn+ssh://ashokraja@192.168.10.100/home/svn/repo
+
+
+
+2010-06-10T17:36:44.237757Z
+15
+ashokraja
+
+
+svn:special svn:externals svn:needs-lock
+
+common.py
+file
+18
+
+
+
+2010-06-27T11:14:52.000000Z
+ea9f01eaee7149acbf4211bbd5b95c01
+2010-06-27T17:22:03.143219Z
+18
+ashokraja
+
+goto.py
+file
+
+
+
+
+2010-06-10T17:28:41.000000Z
+7a2c9be706c387385f898b638f8f7734
+2010-06-10T17:36:44.237757Z
+15
+ashokraja
+has-props
+
+__init__.py
+file
+
+
+
+
+2010-06-10T17:28:41.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2010-06-10T17:36:44.237757Z
+15
+ashokraja
+
+global.py
+file
+
+
+
+
+2010-06-10T17:28:41.000000Z
+39c75e3fb4737bd953f053fee03c41f3
+2010-06-10T17:36:44.237757Z
+15
+ashokraja
+

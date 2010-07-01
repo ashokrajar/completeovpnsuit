@@ -1,0 +1,23 @@
+Basic Requirements :
+~~~~~~~~~~~~~~~~~~~~
+
+Operating System 	:	Linux
+Programming Language	:	Python-2.6.4, Django-1.1.1
+DataBase		:	SQLite 3.0
+
+
+Dependencies :
+~~~~~~~~~~~~~
+- Python 2.5
+- gcc
+- make
+- libc6-dev
+- liblzo-dev
+
+shell> sudo apt-get install python python-mysqldb
+shell> sudo apt-get install make
+shell> sudo apt-get install gcc libc6-dev
+shell> sudo apt-get install liblzo-dev
+shell> sudo apt-get install libssl-dev
+
+OpenVPN Version Installed : openvpn-2.1.1

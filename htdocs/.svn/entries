@@ -1,0 +1,28 @@
+8
+
+dir
+12
+svn+ssh://ashokraja@192.168.10.100/home/svn/repo/projects/completeovpnsuit/htdocs
+svn+ssh://ashokraja@192.168.10.100/home/svn/repo
+
+
+
+2010-06-04T19:14:50.005174Z
+2
+ashokraja
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d20aa8f9-cbf6-474e-9c5b-d95152ec42de
+
