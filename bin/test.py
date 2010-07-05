@@ -5,29 +5,15 @@
 Author      :       Ashok Raja R <ashokraja.linux@gmail.com>
 Project     :       Complete OVPN Suit
 '''
+
 import subprocess
-import os
-import sys
-import time
+import modules.common
 
-p = subprocess.Popen("mytest", shell=True, bufsize=4096, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+modules.common.set_globalvar()
 
-print "Please Wait, While we Create the Key ...."
-while p.poll() == None:
-    sys.stdout.write("(|)\r")
-    sys.stdout.flush()
-    time.sleep(0.1)
-    sys.stdout.write("(/)\r")
-    sys.stdout.flush()
-    time.sleep(0.1)
-    sys.stdout.write("(-)\r")
-    sys.stdout.flush()
-    time.sleep(0.1)
-    sys.stdout.write("(\\)\r")
-    sys.stdout.flush()
-    time.sleep(0.1)
+try:
+    proc = subprocess.Popen([modules.common.opensslcmd, 'req', '-batch', '-days', modules.common.openssl_ca_key_expire, '-nodes', '-new', '-newkey', 'rsa:' + modules.common.openssl_key_size, '-sha1', '-x509', '-keyout', '/tmp/ca.key', '-out', '/tmp/ca.crt', '-config', modules.common.openssl_key_config_file], shell=False, bufsize=4096, env={"COVPNS_ROOT": modules.common.covpns_root, "KEY_COUNTRY": modules.common.openssl_key_country, "KEY_PROVINCE": modules.common.openssl_key_province, "KEY_CITY": modules.common.openssl_key_city, "KEY_ORG": modules.common.openssl_key_organization, "KEY_OU": modules.common.openssl_key_organization_unit, "KEY_CN": modules.common.sys_hostname, "KEY_NAME": modules.common.sys_hostname, "KEY_EMAIL": modules.common.openssl_key_master_email})
+except OSError, e:
+    print e
 
-#pbar.finish()
-print p.communicate()
 
-#p.communicate("q")

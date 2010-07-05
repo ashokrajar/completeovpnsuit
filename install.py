@@ -49,18 +49,18 @@ covpns_installer_dir = os.getcwd()
 # Function declarations |
 #-----------------------|
 # Function to get the User Confirmation
-def get_user_confirmation(user_message,continue_program):
+def get_user_confirmation(user_message, continue_program):
     '''get_user_confirmation('User Defined Message to be Display','continue/no')
     Display the User Defined Message and prompts for confimation, User should Confirm with 'yes' or 'no'.
     When user confirms with enter as input, it is considered yes.
     '''
     try:
-        user_confirms = raw_input(user_message  + ' [yes] : ')
+        user_confirms = raw_input(user_message + ' [yes] : ')
     except KeyboardInterrupt:
         print "\nUser Terminated"
         raise sys.exit(254)
     except EOFError:
-        get_user_confirmation("\n" + user_message,continue_program)
+        get_user_confirmation("\n" + user_message, continue_program)
     else:
         # Input Data Validation
         if len(user_confirms) == 0:
@@ -72,7 +72,7 @@ def get_user_confirmation(user_message,continue_program):
                 else:
                     return 0
             else:
-                get_user_confirmation(user_message,continue_program)
+                get_user_confirmation(user_message, continue_program)
 
 # Function to get User Input
 def get_user_input(user_message):
@@ -95,7 +95,6 @@ def validate_openssl_keydata(openssl_keydata):
     # Regular Expression for Matching
     pattern = re.compile('^[a-zA-Z\s]{1,}$')
     if pattern.search(openssl_keydata):
-        return_value  = pattern.search(openssl_keydata).group()
         return True
     else:
         return False
@@ -107,7 +106,6 @@ def validate_email_addr(email_addr):
     # Regular Expression for Matching
     pattern = re.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
     if pattern.search(email_addr):
-        return_value  = pattern.search(email_addr).group()
         return True
     else:
         return False
@@ -175,6 +173,11 @@ def post_install():
     if validate_openssl_keydata(openssl_key_organization) != 1:
         print "Warning : Invalid City '" + openssl_key_organization + "' Only Characters are allowed, Using default Organization 'MyCompany Pvt Ltd'"
         openssl_key_organization = "MyCompany Pvt Ltd"
+    # Get Key Organization Unit Name
+    openssl_key_organization_unit = get_user_input("Enter Key Organization Unit Name [Information System] : ")
+    if validate_openssl_keydata(openssl_key_organization_unit) != 1:
+        print "Warning : Invalid Organization Unit Name '" + openssl_key_organization_unit + "' Only Characters are allowed, Using default Organization 'Information System'"
+        openssl_key_organization_unit = "Information System"
     # Get Key Master E-Mail
     openssl_key_master_email = get_user_input("Enter Company E-Mail [xyz@mycompany.com] : ")
     if validate_openssl_keydata(openssl_key_master_email) != 1:
@@ -182,29 +185,29 @@ def post_install():
     # Get the User Key expiry
     openssl_user_key_expire = get_user_input("Enter the User Certificate Expiry Days [30] : ")
     if len(openssl_user_key_expire) == 0:
-        openssl_user_key_expire ="30"
+        openssl_user_key_expire = "30"
     elif openssl_user_key_expire.isdigit():
         if int(openssl_user_key_expire) > 0:
             if int(openssl_user_key_expire) < 30:
                 print "Warning : Recommended User certificate Expiry Days shoud be atleast 30.\n"
-                openssl_user_key_expire ="30"
+                openssl_user_key_expire = "30"
             elif int(openssl_user_key_expire) > 90:
-                get_user_confirmation('Alert : Setting User Certificate Expiry more than 90 Days is a Security Risk.','continue')
+                get_user_confirmation('Alert : Setting User Certificate Expiry more than 90 Days is a Security Risk.', 'continue')
         else:
             print "Note : User certificate Expiry Days can't be a negative value, using default days 30\n"
-            openssl_user_key_expire ="30"
+            openssl_user_key_expire = "30"
     else:
         print "Note : User certificate Expiry Days you entered is not valid, using default days 30\n"
-        openssl_user_key_expire ="30"
+        openssl_user_key_expire = "30"
     # Initialize the Settings Database
     db_conn = sqlite3.connect(covpns_install_dir + "/data/settings.db")
     settings_db = db_conn.cursor()
     # Create/Insert/Update Global Settings Table
     settings_db.execute('''create table global (root_dir text, pkcscmd text)''')
-    settings_db.execute('insert into global values (?,?)',(covpns_install_dir,pkcs11toolcmd))
+    settings_db.execute('insert into global values (?,?)', (covpns_install_dir, pkcs11toolcmd))
     # Create/Insert/Update Openssl Settings Table
-    settings_db.execute('''create table openssl (opensslcmd text,openssl_key_config_file text,openssl_key_size text,openssl_ca_key_expire text,openssl_user_key_expire text,openssl_key_country text,openssl_key_province tex,openssl_key_city text,openssl_key_organization text,openssl_key_master_email text)''')
-    settings_db.execute('insert into openssl values (?,?,?,?,?,?,?,?,?,?)',(opensslcmd,openssl_key_config_file,openssl_key_size,openssl_ca_key_expire,openssl_user_key_expire,openssl_key_country,openssl_key_province,openssl_key_city,openssl_key_organization,openssl_key_master_email))
+    settings_db.execute('''create table openssl (opensslcmd text,openssl_key_config_file text,openssl_key_size text,openssl_ca_key_expire text,openssl_user_key_expire text,openssl_key_country text,openssl_key_province tex,openssl_key_city text,openssl_key_organization text,openssl_key_organization_unit text,openssl_key_master_email text)''')
+    settings_db.execute('insert into openssl values (?,?,?,?,?,?,?,?,?,?,?)', (opensslcmd, openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_user_key_expire, openssl_key_country, openssl_key_province, openssl_key_city, openssl_key_organization, openssl_key_organization_unit, openssl_key_master_email))
     # Save the Changes to Database
     db_conn.commit()
     # Close Database
@@ -249,7 +252,7 @@ elif sslcmd_status[0] == 256:
     print "If openssl is not installed, You can install it by typing:\nsudo apt-get install openssl"
     raise sys.exit(248)
 else:
-    print "Not Found\nError : " +  sslcmd_status[1] + "\nEither OpenSSL not-installed or installed on different Location."
+    print "Not Found\nError : " + sslcmd_status[1] + "\nEither OpenSSL not-installed or installed on different Location."
     raise sys.exit(248)
 # Check for pkcs11-tool
 print "Checking for pkcs11-tool\t:\t",
@@ -263,7 +266,7 @@ elif sslcmd_status[0] == 256:
     print "If opensc is not installed, You can install it by typing:\nsudo apt-get install opensc "
     raise sys.exit(247)
 else:
-    print "Not Found\nError : " +  sslcmd_status[1] + "\nEither opensc not-installed or installed on different Location."
+    print "Not Found\nError : " + sslcmd_status[1] + "\nEither opensc not-installed or installed on different Location."
     raise sys.exit(247)
 
 
@@ -278,12 +281,12 @@ else:
 # If it exists run the post install after getting user confirmation
 if os.path.exists(covpns_install_dir):
     print "\nError : " + covpns_install_dir + " already Exists. Looks like some other version of Complete OVPN Suit is installed."
-    get_user_confirmation('Do you want to Re-Configure Complete OVPN Suit by Running the Post-Install Script ? ','no')
+    get_user_confirmation('Do you want to Re-Configure Complete OVPN Suit by Running the Post-Install Script ? ', 'no')
     if os.path.exists(covpns_install_dir + "/data/settings.db"):
-        get_user_confirmation('Warning : This will overwrite the existing Configuration. Still you want to Continue ? ','no')
-        backup_file = covpns_install_dir + "/backup/settings.db_backup_"+date.strftime("%d-%m-%Y_%H-%M")
-        shutil.move(covpns_install_dir + "/data/settings.db",backup_file)
-        print "\nNote : Old Configuration backuped in "+ backup_file
+        get_user_confirmation('Warning : This will overwrite the existing Configuration. Still you want to Continue ? ', 'no')
+        backup_file = covpns_install_dir + "/backup/settings.db_backup_" + date.strftime("%d-%m-%Y_%H-%M")
+        shutil.move(covpns_install_dir + "/data/settings.db", backup_file)
+        print "\nNote : Old Configuration backuped in " + backup_file
     post_install()
 # Get Users Confirmation and Continue with the Installation
 get_user_confirmation('Complete OVPN Suit will be Installed in [' + covpns_install_dir + "]. Can I Continue ?", 'no')
@@ -304,7 +307,7 @@ os.chdir("/usr/local/src/openvpn-src")
 config_status = commands.getstatusoutput("sudo ./configure")
 # If ./configure failed Fetch the error to display
 if config_status[0] != 0:
-    pattern = re.compile('(.*?)configure(.*?)error.*',re.M)
+    pattern = re.compile('(.*?)configure(.*?)error.*', re.M)
     error_report = pattern.search(config_status[1]).group()
     print "Error [" + str(config_status[0]) + "] : " + error_report
     # Generate Error Report if Possible
@@ -361,17 +364,17 @@ os.makedirs(covpns_install_dir)
 os.makedirs(covpns_install_dir + "/data", mode=0700)
 os.makedirs(covpns_install_dir + "/user-keys", mode=0700)
 os.makedirs(covpns_install_dir + "/keys/ca", mode=0700)
-os.makedirs(covpns_install_dir + "/keys/certs", mode=0700)
+os.makedirs(covpns_install_dir + "/keys/cert", mode=0700)
+os.makedirs(covpns_install_dir + "/keys/data", mode=0755)
 os.makedirs(covpns_install_dir + "/keys/crl", mode=0700)
-os.makedirs(covpns_install_dir + "/keys/database", mode=0700)
 os.makedirs(covpns_install_dir + "/tmp", mode=1770)
 os.makedirs(covpns_install_dir + "/pid", mode=0700)
 os.makedirs(covpns_install_dir + "/backup", mode=0755)
 print "Copying files and directories from Installer to Installation Path"
-shutil.copytree(covpns_installer_dir + "/bin",covpns_install_dir + "/bin")
-shutil.copytree(covpns_installer_dir + "/conf",covpns_install_dir + "/conf")
-shutil.copytree(covpns_installer_dir + "/doc",covpns_install_dir + "/doc")
-shutil.copytree(covpns_installer_dir + "/htdocs",covpns_install_dir + "/htdocs")
+shutil.copytree(covpns_installer_dir + "/bin", covpns_install_dir + "/bin")
+shutil.copytree(covpns_installer_dir + "/conf", covpns_install_dir + "/conf")
+shutil.copytree(covpns_installer_dir + "/doc", covpns_install_dir + "/doc")
+shutil.copytree(covpns_installer_dir + "/htdocs", covpns_install_dir + "/htdocs")
 
 #-- First Run --#
 post_install()

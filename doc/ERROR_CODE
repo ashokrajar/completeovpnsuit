@@ -11,6 +11,8 @@ EXIT_CODE       Description
 248             openssl not Installed
 247             pkcs11-tool not Installed (opensc)
 246				Diffie-Hellman Key Already Exists
+245				CA Key/Cert Exists
+244				Server Key/Cert Exists
 
 1               Program Exit Status
 0               Success

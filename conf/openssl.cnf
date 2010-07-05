@@ -32,17 +32,17 @@ default_ca	= CA_default		# The default ca section
 ####################################################################
 [ CA_default ]
 
-dir		= $ENV::KEY_DIR		# Where everything is kept
-certs		= $dir			# Where the issued certs are kept
-crl_dir		= $dir			# Where the issued crl are kept
-database	= $dir/index.txt	# database index file.
-new_certs_dir	= $dir			# default place for new certs.
+dir		= $ENV::COVPNS_ROOT		# Where everything is kept
+certs		= $dir/user-keys/			# Where the issued certs are kept
+crl_dir		= $dir/keys/crl			# Where the issued crl are kept
+database	= $dir/keys/data/index.txt	# database index file.
+new_certs_dir	= $dir/user-keys/			# default place for new certs.
 
-certificate	= $dir/ca.crt	 	# The CA certificate
-serial		= $dir/serial 		# The current serial number
-crl		= $dir/crl.pem 		# The current CRL
-private_key	= $dir/ca.key	 	# The private key
-RANDFILE	= $dir/.rand		# private random number file
+certificate	= $dir/keys/ca/ca.crt	 	# The CA certificate
+serial		= $dir/keys/data/serial 		# The current serial number
+crl		= $dir/keys/crl/crl.pem 		# The current CRL
+private_key	= $dir/keys/ca/ca.key	 	# The private key
+RANDFILE	= $dir/keys/.rand		# private random number file
 
 x509_extensions	= usr_cert		# The extentions to add to the cert
 

@@ -9,8 +9,10 @@ Project     :       Complete OVPN Suit
 '''
 
 import os
+import re
 import sys
 import sqlite3
+import socket
 import time
 
 
@@ -22,18 +24,22 @@ def set_globalvar():
     config_dir, webroot, backup_dir, tmp_dir, openssl_data, opensslcmd,
     openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_user_key_expire'''
     # Define Global Variables
-    global covpns_root, pkcs11toolcmd, server_key_dir, user_key_dir, data_dir, pid_dir, config_dir, webroot, backup_dir, tmp_dir, openssl_data, opensslcmd, openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_user_key_expire
+    global covpns_root, pkcs11toolcmd, server_key_dir, ca_key_file, ca_cert_file, server_key_file, server_cert_file, server_csr_file, user_key_dir, data_dir, pid_dir, config_dir, webroot, backup_dir, tmp_dir, openssl_data, opensslcmd, openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_server_key_expire, openssl_user_key_expire, openssl_key_country, openssl_key_province, openssl_key_city, openssl_key_organization, openssl_key_organization_unit, openssl_key_master_email, sys_hostname
     # Initialize the Settings Database
-    database_dir = os.path.abspath( os.path.abspath(os.path.dirname(sys.argv[0])) + '/../') + "/data/"
+    database_dir = os.path.abspath(os.path.abspath(os.path.dirname(sys.argv[0])) + '/../') + "/data/"
     db_conn = sqlite3.connect(database_dir + "settings.db")
     settings_db = db_conn.cursor()
-
     # Get Data from DB and Configure the Global Variable
     settings_db.execute('select * from global')
     global_data = settings_db.fetchone()
     covpns_root = global_data[0]
     pkcs11toolcmd = global_data[1]
     server_key_dir = covpns_root + "/keys"
+    ca_key_file = server_key_dir + "/ca/ca.key"
+    ca_cert_file = server_key_dir + "/ca/ca.crt"
+    server_key_file = server_key_dir + "/cert/server.key"
+    server_cert_file = server_key_dir + "/cert/server.crt"
+    server_csr_file = server_key_dir + "/cert/server.csr"
     user_key_dir = covpns_root + "/user-keys"
     data_dir = covpns_root + "/data"
     pid_dir = covpns_root + "/pid"
@@ -48,24 +54,34 @@ def set_globalvar():
     openssl_key_config_file = openssl_data[1]
     openssl_key_size = openssl_data[2]
     openssl_ca_key_expire = openssl_data[3]
+    openssl_server_key_expire = openssl_data[3]
     openssl_user_key_expire = openssl_data[4]
-
+    openssl_key_country = openssl_data[5]
+    openssl_key_province = openssl_data[6]
+    openssl_key_city = openssl_data[7]
+    openssl_key_organization = openssl_data[8]
+    openssl_key_organization_unit = openssl_data[9]
+    openssl_key_master_email = openssl_data[10]
     # Close Database
     settings_db.close()
+    # Initialize System Specific Variables
+    sys_hostname = socket.gethostname()
+    # Export Shell evn Variables
+    os.putenv('COVPNS_ROOT', covpns_root)
 
 # Function to get the User Confirmation
-def get_user_confirmation(user_message,continue_program):
+def get_user_confirmation(user_message, continue_program):
     '''get_user_confirmation('User Defined Message to be Display','continue/no')
     Display the User Defined Message and prompts for confimation, User should Confirm with 'yes' or 'no'.
     When user confirms with enter as input, it is considered yes.
     '''
     try:
-        user_confirms = raw_input(user_message  + ' [yes] : ')
+        user_confirms = raw_input(user_message + ' [yes] : ')
     except KeyboardInterrupt:
         print "\nUser Terminated"
         raise sys.exit(254)
     except EOFError:
-        get_user_confirmation("\n" + user_message,continue_program)
+        get_user_confirmation("\n" + user_message, continue_program)
     else:
         # Input Data Validation
         if len(user_confirms) == 0:
@@ -77,7 +93,7 @@ def get_user_confirmation(user_message,continue_program):
                 else:
                     return 0
             else:
-                get_user_confirmation(user_message,continue_program)
+                get_user_confirmation(user_message, continue_program)
 
 # Function to get User Input
 def get_user_input(user_message):
@@ -100,7 +116,17 @@ def validate_openssl_keydata(openssl_keydata):
     # Regular Expression for Matching
     pattern = re.compile('^[a-zA-Z\s]{1,}$')
     if pattern.search(openssl_keydata):
-        return_value  = pattern.search(openssl_keydata).group()
+        return True
+    else:
+        return False
+
+# Function to Validate Key Data Input
+def validate_openssl_commonname(openssl_keydata):
+    '''validate_openssl_keydata('data')
+    Returns True if the Data Matches the Regular Expression '^[a-zA-Z\s]{1,}$' '''
+    # Regular Expression for Matching
+    pattern = re.compile('^[a-zA-Z_\.]{1,}$')
+    if pattern.search(openssl_keydata):
         return True
     else:
         return False
@@ -112,7 +138,6 @@ def validate_email_addr(email_addr):
     # Regular Expression for Matching
     pattern = re.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
     if pattern.search(email_addr):
-        return_value  = pattern.search(email_addr).group()
         return True
     else:
         return False
@@ -120,7 +145,7 @@ def validate_email_addr(email_addr):
 # Function to Display Rotating ProgressMarker
 def show_rotating_progressmarker():
     '''Displays a Rotating Progress Marker'''
-    for I in range(100):
+    for I in range(2):
         sys.stdout.write("(|)\r")
         sys.stdout.flush()
         time.sleep(0.1)
