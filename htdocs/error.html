@@ -1,0 +1,32 @@
+<!--
+#
+# Easy OpenVPN - Complete OpenVPN Suit    
+# Copyright (c) 2010 Easy OpenVPN. All rights reserved.
+#
+# Released under the GPL - see www.gpl.org 
+-->
+
+{% extends 'base.html' %}
+
+{% block page_body %}
+	
+	{% if error == "user" %}
+		<div align="center">
+			<h2>Error : Running as User {{ server_user }}</h2>
+		</div>
+	{% endif %}
+	
+	{% if error == "installed" %}
+		<div align="left">
+			<h3>Error : Installaion Path "{{ installation_path }} Already Exists.</h3>
+			<h3>Installation can't Continue</h3>
+		</div>
+	{% endif %}
+	
+	{% if error == "unknown" %}
+		<div align="center">
+			<h2>Unknow Error Has occured. Please Start the Installation from First</h2>
+		</div>
+	{% endif %}
+	
+{% endblock %}

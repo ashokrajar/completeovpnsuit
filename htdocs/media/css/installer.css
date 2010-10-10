@@ -1,0 +1,76 @@
+/*
+#
+# Easy OpenVPN - Complete OpenVPN Suit    
+# Copyright (c) 2010 Easy OpenVPN. All rights reserved.
+#
+# Released under the GPL - see www.gpl.org
+*/
+
+/* ---------------- Header ---------------- */
+div#header {
+	position: absolute;
+ 	top: 0px;
+ 	left: 5px;
+ 	right: 5px;
+}
+
+div#header div#c_logo{
+	float: left;
+	width: 107px;
+	height: 60px;
+	background: url("/media/pic/main_logo.jpg") 0 0 repeat-x;
+}
+
+div#header div#title {
+	font-family: 'Century Gothic, monospace';
+	font-weight: bolder;
+	font-size: xx-large;
+}
+
+/* ---------------- Footer ---------------- */
+#footer {
+	position: relative;
+	height: 20px;
+}
+
+/* ---------------- Core Styles ---------------- */
+body{
+	font-family: 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif';
+    font-size: 12px;
+    margin-top:65px;
+	margin-bottom:10px;
+	margin-right:5px;
+	margin-left:5px;
+    background: white;
+}
+
+textarea#styled {
+	width: 400px;
+	height: 250px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+}
+
+table {
+	border: opx;
+	width: 800px;
+	text-align: left;
+	vertical-align: top;
+	font-family: 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif';
+	font-size: 15px;
+}
+
+div#checks_ok {
+	font-weight: bold;
+	color: green;
+}
+
+div#checks_notok {
+	color: red;
+	font-weight: bold;
+}
+
+div#error_message {
+	font-family: 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif';
+	font-size: 12px;
+}
