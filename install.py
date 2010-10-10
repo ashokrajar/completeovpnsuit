@@ -1,5 +1,8 @@
 #! /usr/bin/python -d
-# Copyright (c) 2010 Skynet Pvt Ltd. All rights reserved.
+#
+# Easy OpenVPN - Complete OpenVPN Suit    
+# Copyright (c) 2010 Easy OpenVPN. All rights reserved.
+#
 # Released under the GPL - see www.gpl.org
 
 '''
@@ -169,7 +172,7 @@ def post_install():
         print "Warning : Invalid City '" + openssl_key_city + "' Only Characters are allowed, Using default City 'Madurai'"
         openssl_key_province = "Madurai"
     # Get Key Organization
-    openssl_key_organization = get_user_input("Enter Key Organiazation Name [MyCompany Pvt Ltd] : ")
+    openssl_key_organization = get_user_input("Enter Key Organization Name [MyCompany Pvt Ltd] : ")
     if validate_openssl_keydata(openssl_key_organization) != 1:
         print "Warning : Invalid City '" + openssl_key_organization + "' Only Characters are allowed, Using default Organization 'MyCompany Pvt Ltd'"
         openssl_key_organization = "MyCompany Pvt Ltd"
@@ -203,10 +206,10 @@ def post_install():
     db_conn = sqlite3.connect(covpns_install_dir + "/data/settings.db")
     settings_db = db_conn.cursor()
     # Create/Insert/Update Global Settings Table
-    settings_db.execute('''create table global (root_dir text, pkcscmd text)''')
+    # settings_db.execute('''create table global (root_dir text, pkcscmd text)''')
     settings_db.execute('insert into global values (?,?)', (covpns_install_dir, pkcs11toolcmd))
     # Create/Insert/Update Openssl Settings Table
-    settings_db.execute('''create table openssl (opensslcmd text,openssl_key_config_file text,openssl_key_size text,openssl_ca_key_expire text,openssl_user_key_expire text,openssl_key_country text,openssl_key_province tex,openssl_key_city text,openssl_key_organization text,openssl_key_organization_unit text,openssl_key_master_email text)''')
+    # settings_db.execute('''create table openssl (opensslcmd text,openssl_key_config_file text,openssl_key_size text,openssl_ca_key_expire text,openssl_user_key_expire text,openssl_key_country text,openssl_key_province tex,openssl_key_city text,openssl_key_organization text,openssl_key_organization_unit text,openssl_key_master_email text)''')
     settings_db.execute('insert into openssl values (?,?,?,?,?,?,?,?,?,?,?)', (opensslcmd, openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_user_key_expire, openssl_key_country, openssl_key_province, openssl_key_city, openssl_key_organization, openssl_key_organization_unit, openssl_key_master_email))
     # Save the Changes to Database
     db_conn.commit()
@@ -282,12 +285,12 @@ else:
 if os.path.exists(covpns_install_dir):
     print "\nError : " + covpns_install_dir + " already Exists. Looks like some other version of Complete OVPN Suit is installed."
     get_user_confirmation('Do you want to Re-Configure Complete OVPN Suit by Running the Post-Install Script ? ', 'no')
-    if os.path.exists(covpns_install_dir + "/data/settings.db"):
-        get_user_confirmation('Warning : This will overwrite the existing Configuration. Still you want to Continue ? ', 'no')
-        backup_file = covpns_install_dir + "/backup/settings.db_backup_" + date.strftime("%d-%m-%Y_%H-%M")
-        shutil.move(covpns_install_dir + "/data/settings.db", backup_file)
-        print "\nNote : Old Configuration backuped in " + backup_file
-    post_install()
+#    if os.path.exists(covpns_install_dir + "/data/settings.db"):
+#        get_user_confirmation('Warning : This will overwrite the existing Configuration. Still you want to Continue ? ', 'no')
+#        backup_file = covpns_install_dir + "/backup/settings.db_backup_" + date.strftime("%d-%m-%Y_%H-%M")
+#        shutil.move(covpns_install_dir + "/data/settings.db", backup_file)
+#        print "\nNote : Old Configuration backuped in " + backup_file
+#    post_install()
 # Get Users Confirmation and Continue with the Installation
 get_user_confirmation('Complete OVPN Suit will be Installed in [' + covpns_install_dir + "]. Can I Continue ?", 'no')
 
@@ -361,20 +364,30 @@ if make_install_status[0] != 0:
 print "\nInstalling Complete OVPN Suit :\n```````````````````````````````"
 print "Creating required files and directories"
 os.makedirs(covpns_install_dir)
-os.makedirs(covpns_install_dir + "/data", mode=0700)
+os.makedirs(covpns_install_dir + "/conf", mode=0755)
+os.makedirs(covpns_install_dir + "/htdocs", mode=0755)
 os.makedirs(covpns_install_dir + "/user-keys", mode=0700)
 os.makedirs(covpns_install_dir + "/keys/ca", mode=0700)
 os.makedirs(covpns_install_dir + "/keys/cert", mode=0700)
 os.makedirs(covpns_install_dir + "/keys/data", mode=0755)
 os.makedirs(covpns_install_dir + "/keys/crl", mode=0700)
 os.makedirs(covpns_install_dir + "/tmp", mode=1770)
-os.makedirs(covpns_install_dir + "/pid", mode=0700)
+os.makedirs(covpns_install_dir + "/proc", mode=0700)
 os.makedirs(covpns_install_dir + "/backup", mode=0755)
 print "Copying files and directories from Installer to Installation Path"
 shutil.copytree(covpns_installer_dir + "/bin", covpns_install_dir + "/bin")
-shutil.copytree(covpns_installer_dir + "/conf", covpns_install_dir + "/conf")
+shutil.copytree(covpns_installer_dir + "/data", covpns_install_dir + "/data")
 shutil.copytree(covpns_installer_dir + "/doc", covpns_install_dir + "/doc")
-shutil.copytree(covpns_installer_dir + "/htdocs", covpns_install_dir + "/htdocs")
+shutil.copytree(covpns_installer_dir + "/modules", covpns_install_dir + "/modules")
+shutil.copyfile(covpns_installer_dir + "/src/openssl.cnf", covpns_install_dir + "/conf/openssl.cnf")
+shutil.copyfile(covpns_installer_dir + "/__init__.py", covpns_install_dir + "/__init__.py")
+shutil.copyfile(covpns_installer_dir + "/install.py", covpns_install_dir + "/install.py")
+shutil.copyfile(covpns_installer_dir + "/manage.py", covpns_install_dir + "/manage.py")
+shutil.copyfile(covpns_installer_dir + "/README", covpns_install_dir + "/README")
+shutil.copyfile(covpns_installer_dir + "/settings.py", covpns_install_dir + "/settings.py")
+shutil.copyfile(covpns_installer_dir + "/urls.py", covpns_install_dir + "/urls.py")
+shutil.copyfile(covpns_installer_dir + "/views.py", covpns_install_dir + "/views.py")
+
 
 #-- First Run --#
-post_install()
+# post_install()

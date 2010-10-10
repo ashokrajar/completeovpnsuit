@@ -1,9 +1,13 @@
 #! /usr/bin/python -d
-# Copyright (c) 2010 Skynet Pvt Ltd. All rights reserved.
+#
+# Easy OpenVPN - Complete OpenVPN Suit    
+# Copyright (c) 2010 Easy OpenVPN. All rights reserved.
+#
+# Released under the GPL - see www.gpl.org
 
 '''
 Author      :       Ashok Raja R <ashokraja.linux@gmail.com>
-Project     :       Complete OVPN Suit
+Project     :       Easy OpenVPN
 '''
 
 

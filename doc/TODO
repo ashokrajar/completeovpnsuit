@@ -1,0 +1,32 @@
+Daily :
+~~~~~~~
+1) Create OpenVPN Configuration file
+2) Write OpenVPN server Start/Stop Script
+3) Add User Certificate Creation
+
+Must to Have :
+~~~~~~~~~~~~~~
+1) COVPNS Server Start/Stop Script
+2) OpenVPN User Manager
+3) Web Front-End Design using django
+4) Get All features available in command line interface to be functional in Web
+   Also add some cool advanced Features Like(cool interface design, easy creation of users, start/stop server
+
+
+Critical :
+~~~~~~~~~~
+1) Clear all the files if Installation failes in any stage.
+    - including openvpn-src folder
+2) Prompt Admin User change password/e-mail screen at first login after installation.
+
+
+Feature List :
+~~~~~~~~~~~~~~
+1) Create a Installer for Application.
+
+
+Nice To Have :
+~~~~~~~~~~~~~~ 
+1) Live Monitoring of the User Status
+2) User statistics Graph/Report
+3) Web Based Installer

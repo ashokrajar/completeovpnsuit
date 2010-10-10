@@ -1,11 +1,14 @@
 #! /usr/bin/python -d
-# Copyright (c) 2010 Skynet Pvt Ltd. All rights reserved.
+#
+# Easy OpenVPN - Complete OpenVPN Suit    
+# Copyright (c) 2010 Easy OpenVPN. All rights reserved.
+#
 # Released under the GPL - see www.gpl.org
 
 '''Global Identifier and Customs Function declaration for Complete OVPN Suit.
 
 Author      :       Ashok Raja R <ashokraja.linux@gmail.com>
-Project     :       Complete OVPN Suit
+Project     :       Easy OpenVPN
 '''
 
 import os
@@ -17,16 +20,15 @@ import time
 
 
 # Function to Define Global Setings
-def set_globalvar():
+def set_globalvar(database_dir=os.path.abspath(os.path.abspath(os.path.dirname(sys.argv[0])) + '/../') + "/data/"):
     '''Initialize global Variables Specific to covpns.
     Variable List :
     covpns_root, pkcs11toolcmd, server_key_dir, user_key_dir, data_dir, pid_dir,
     config_dir, webroot, backup_dir, tmp_dir, openssl_data, opensslcmd,
     openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_user_key_expire'''
     # Define Global Variables
-    global covpns_root, pkcs11toolcmd, server_key_dir, ca_key_file, ca_cert_file, server_key_file, server_cert_file, server_csr_file, user_key_dir, data_dir, pid_dir, config_dir, webroot, backup_dir, tmp_dir, openssl_data, opensslcmd, openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_server_key_expire, openssl_user_key_expire, openssl_key_country, openssl_key_province, openssl_key_city, openssl_key_organization, openssl_key_organization_unit, openssl_key_master_email, sys_hostname
+    global covpns_root, pkcs11toolcmd, server_key_dir, ca_key_file, ca_cert_file, server_key_file, server_cert_file, server_csr_file, user_key_dir, data_dir, proc_dir, config_dir, webroot, backup_dir, tmp_dir, openssl_data, opensslcmd, openssl_key_config_file, openssl_key_size, openssl_ca_key_expire, openssl_server_key_expire, openssl_user_key_expire, openssl_key_country, openssl_key_province, openssl_key_city, openssl_key_organization, openssl_key_organization_unit, openssl_key_master_email, sys_hostname
     # Initialize the Settings Database
-    database_dir = os.path.abspath(os.path.abspath(os.path.dirname(sys.argv[0])) + '/../') + "/data/"
     db_conn = sqlite3.connect(database_dir + "settings.db")
     settings_db = db_conn.cursor()
     # Get Data from DB and Configure the Global Variable
@@ -42,7 +44,7 @@ def set_globalvar():
     server_csr_file = server_key_dir + "/cert/server.csr"
     user_key_dir = covpns_root + "/user-keys"
     data_dir = covpns_root + "/data"
-    pid_dir = covpns_root + "/pid"
+    proc_dir = covpns_root + "/proc"
     config_dir = covpns_root + "/conf"
     webroot = covpns_root + "/htdocs"
     backup_dir = covpns_root + "/backup"
